@@ -3,7 +3,6 @@ import sys
 import traceback
 from helpers.log import log
 
-
 class StrategyTemplate:
     name = 'DefaultStrategyTemplate'
 

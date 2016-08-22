@@ -1,7 +1,5 @@
 # coding=utf-8
 
-stock_list = ['', '', '', '']
-
 common_mysql_config = {
     'user': 'root',
     'passwd': '',

@@ -5,7 +5,6 @@ import time
 import datetime as dt
 from dateutil import tz
 
-
 # 定义策略类
 class Strategy(StrategyTemplate):
     name = 'test'  # 定义策略名字
@@ -25,9 +24,9 @@ class Strategy(StrategyTemplate):
         self.clock_engine.register_interval(minute_interval, trading=False)
         # 进行相关的初始化定义
         self.buy_stocks = []  # 假如一个股票一天只想买入一次。定义一个列表用来存储策略买过的股票
+
     # 策略函数，收到行情推送后会自动调用
     def strategy(self, event):
-        print event
         # 使用 self.user 来操作账户
         # 使用 self.log.info('message') 来打印你所需要的 log
         self.log.info('\n\n策略1触发')
@@ -45,15 +44,20 @@ class Strategy(StrategyTemplate):
         :param event: event.data.clock_event 为 [0.5, 1, 3, 5, 15, 30, 60] 单位为分钟,  ['open', 'close'] 为开市、收市
             event.data.trading_state  bool 是否处于交易时间
         """
-        print event
         if event.data.clock_event == 'open':
             # 开市了
             self.log.info('open')
+        elif event.data.clock_event == 'pause':
+            #上午休市
+            self.log.info('pause')
+        elif event.data.clock_event == 'continue':
+            #下午开市
+            self.log.info('continue')
         elif event.data.clock_event == 'close':
             # 收市了
             self.log.info('close')
             # 收盘时清空已买股票列表 self.buy_stocks
             del self.buy_stocks[:]
-        elif event.data.clock_event == 5:
+        elif event.data.clock_event == 1:
             # 5 分钟的 clock
-            self.log.info("5分钟")
+            self.log.info("1分钟")

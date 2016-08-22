@@ -7,6 +7,7 @@ from threading import Thread, Lock
 import gevent
 from gevent import monkey
 monkey.patch_all()
+import threading
 
 from logbook import Logger, StreamHandler
 import signal
@@ -115,16 +116,15 @@ class MainEngine:
                 # 注销策略的监听
                 old_strategy = self.get_strategy(strategy_module.Strategy.name)
                 if old_strategy is None:
-                    print(18181818, strategy_module_name)
                     for s in self.strategy_list:
-                        print(s.name)
+                        self.log.info(s.name)
                 self.log.warn(u'卸载策略: %s' % old_strategy.name)
                 self.strategy_listen_event(old_strategy, "unlisten")
                 gevent.sleep(2)
                 reload = True
             # 重新加载
             if reload:
-                strategy_module = importlib.reload(strategy_module)
+                strategy_module = importlib.import_module('.' + strategy_module_name, 'strategies')
 
             self._modules[strategy_file] = strategy_module
             strategy_class = getattr(strategy_module, 'Strategy')
@@ -179,7 +179,7 @@ class MainEngine:
                 self.load_strategy(self._names)
                 gevent.sleep(2)
             except Exception as e:
-                print(e)
+                self.log.info(e)
 
     def get_strategy(self, name):
         """

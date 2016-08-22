@@ -163,46 +163,45 @@ class Function(ab.Function):
             # print func_name
             return {}
 
-
-def test_ls_talib():
-    for func_name in EXT_FUNCTION_NAMES:
-        dict_param = dict(
-            timeperiod=np.random.randint(10, 100, 1)[0],
-            timeperiod1=np.random.randint(10, 100, 1)[0],
-            timeperiod2=np.random.randint(10, 100, 1)[0],
-            timeperiod3=np.random.randint(10, 100, 1)[0],
-            timeperiod4=np.random.randint(10, 100, 1)[0]
-            # timeperiod1 = np.random.randint(10,100,1),
-        )
-        func = Function(func_name, **dict_param)
-        lookback = func.lookback
-        default_args = func.default_args
-        real_args = default_args.copy()
-        for key, val in real_args.items():
-            real_args[key] = dict_param[key]
-
-        print(func_name)
-        print(dict_param)
-        print(('lookback={0}'.format(lookback)))
-
-
-def test_talib():
-    func_names = list(filter(str.isupper, dir(ab)))
-    func_names = [x for x in func_names if not x.startswith('_')]
-    print(func_names)
-    ad = Function('ADOSC')
-    param = {'fastperiod': 20}
-    ad.parameters = param
-    print((dir(ad)))
-    ad.lookback
-
-
-for name in EXT_FUNCTION_NAMES:
-    exec ("%s = Function('%s')" % (name, name))
-
 __all__ = ['Function'] + list(EXT_FUNCTION_NAMES)
 
 if __name__ == '__main__':
+    def test_ls_talib():
+        for func_name in EXT_FUNCTION_NAMES:
+            dict_param = dict(
+                timeperiod=np.random.randint(10, 100, 1)[0],
+                timeperiod1=np.random.randint(10, 100, 1)[0],
+                timeperiod2=np.random.randint(10, 100, 1)[0],
+                timeperiod3=np.random.randint(10, 100, 1)[0],
+                timeperiod4=np.random.randint(10, 100, 1)[0]
+                # timeperiod1 = np.random.randint(10,100,1),
+            )
+            func = Function(func_name, **dict_param)
+            lookback = func.lookback
+            default_args = func.default_args
+            real_args = default_args.copy()
+            for key, val in real_args.items():
+                real_args[key] = dict_param[key]
+
+            print(func_name)
+            print(dict_param)
+            print(('lookback={0}'.format(lookback)))
+
+
+    def test_talib():
+        func_names = list(filter(str.isupper, dir(ab)))
+        func_names = [x for x in func_names if not x.startswith('_')]
+        print(func_names)
+        ad = Function('ADOSC')
+        param = {'fastperiod': 20}
+        ad.parameters = param
+        print((dir(ad)))
+        ad.lookback
+
+
+    for name in EXT_FUNCTION_NAMES:
+        exec ("%s = Function('%s')" % (name, name))
+
     acd = Function('ACD')
     test_ls_talib()
     test_talib()

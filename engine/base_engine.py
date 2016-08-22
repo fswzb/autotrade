@@ -22,6 +22,7 @@ class BaseEngine:
             target=self.push_quotation,
             name="QuotationEngine.%s" % self.EventType)
         self.quotation_thread.setDaemon(False)
+
         self.init()
 
     def start(self):

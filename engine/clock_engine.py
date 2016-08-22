@@ -95,8 +95,6 @@ class ClockMomentHandler:
         if self.is_trading_date and not etime.is_trade_date():
             # 仅在交易日触发时的判断
             return False
-        print self.next_time
-        print self.clock_engine.now_dt
         return self.next_time <= self.clock_engine.now_dt
 
 
