@@ -581,3 +581,11 @@ def zjlc_stat():
         .replace('page','"page"').replace('"page"s','"pages"').replace('total','"total"').replace('hqtime','"hqtime"') \
         .replace('Column:{code:0 ,name:1 ,np:2 ,pl:3 ,zjin:4 ,inratio:5 ,zlin:6 ,zlratio:7 ,j2:8 ,zdratio:9 ,j1:10 ,xdratio:11 },','')
     return eval(res)
+
+ #昨日涨停个股今日开盘表现(涨幅为正德股/总涨停股)
+def zrztjrbx_open_stat():
+    pass
+#昨日涨停个股今日收盘表现(上涨股/总涨停股)
+def zrztjrbx_close_stat():
+    pass
+

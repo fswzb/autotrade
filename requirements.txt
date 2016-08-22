@@ -10,3 +10,6 @@ pytesseract
 pandas
 pillow
 logbook
+scikit-learn
+keras
+Theano
