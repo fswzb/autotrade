@@ -1,0 +1,12 @@
+tushare
+BeautifulSoup4
+html5lib
+TA-Lib
+schedule
+lxml
+requests
+gevent
+pytesseract
+pandas
+pillow
+logbook
