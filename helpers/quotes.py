@@ -15,8 +15,10 @@ engine = MySQLdb.connect(**common_mysql_config)
 
 def get_code_list():
     stock_basic = ts.get_stock_basics()
-    stock_basic.to_sql(
-        'stock_basics', engine, flavor='mysql', if_exists='replace')
+    stock_basic.to_sql('stock_basics',
+                       engine,
+                       flavor='mysql',
+                       if_exists='replace')
 
     stock_timetomarket = stock_basic['timeToMarket']
     stock_timetomarket = stock_timetomarket.map(
@@ -36,8 +38,10 @@ def get_data(code, start=None):
         start = datetime.datetime.today().strftime('%Y-%m-%d')
     try:
         gevent.sleep(0.2)
-        dayhistory = ts.get_h_data(
-            code=code, start=start, retry_count=8, pause=3)
+        dayhistory = ts.get_h_data(code=code,
+                                   start=start,
+                                   retry_count=8,
+                                   pause=3)
         if dayhistory is None:
             return
         dayhistory['code'] = code
@@ -50,16 +54,23 @@ def get_his_data(code, start=None):
     try:
         gevent.sleep(0.1)
         if start is None:
-            dayhistory = ts.get_hist_data(
-                code=code, retry_count=8, pause=3, ktype='D')
+            dayhistory = ts.get_hist_data(code=code,
+                                          retry_count=8,
+                                          pause=3,
+                                          ktype='D')
         else:
-            dayhistory = ts.get_hist_data(
-                code=code, start=start, retry_count=8, pause=3, ktype='D')
+            dayhistory = ts.get_hist_data(code=code,
+                                          start=start,
+                                          retry_count=8,
+                                          pause=3,
+                                          ktype='D')
         if dayhistory is None:
             return
         dayhistory['code'] = code
-        dayhistory.to_sql(
-            'hist_data', engine, flavor='mysql', if_exists='append')
+        dayhistory.to_sql('hist_data',
+                          engine,
+                          flavor='mysql',
+                          if_exists='append')
     except Exception as e:
         pass
 
@@ -79,69 +90,70 @@ def get_data_all():
 def classification_type(class_types):
     if class_types == 'classification_industry':
         industry_classified = ts.get_industry_classified('sw')
-        industry_classified.to_sql(
-            'classification_industry',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        industry_classified.to_sql('classification_industry',
+                                   engine,
+                                   flavor='mysql',
+                                   if_exists='replace')
     elif class_types == 'concept':
         concept_classified = ts.get_concept_classified()
-        concept_classified.to_sql(
-            'classification_concept',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        concept_classified.to_sql('classification_concept',
+                                  engine,
+                                  flavor='mysql',
+                                  if_exists='replace')
     elif class_types == 'area':
         area_classified = ts.get_area_classified()
-        area_classified.to_sql(
-            'classification_area', engine, flavor='mysql', if_exists='replace')
+        area_classified.to_sql('classification_area',
+                               engine,
+                               flavor='mysql',
+                               if_exists='replace')
     elif class_types == 'sme':
         sme_classified = ts.get_sme_classified()
-        sme_classified.to_sql(
-            'classification_sme', engine, flavor='mysql', if_exists='replace')
+        sme_classified.to_sql('classification_sme',
+                              engine,
+                              flavor='mysql',
+                              if_exists='replace')
     elif class_types == 'gem':
         gem_classified = ts.get_gem_classified()
-        gem_classified.to_sql(
-            'classification_gem', engine, flavor='mysql', if_exists='replace')
+        gem_classified.to_sql('classification_gem',
+                              engine,
+                              flavor='mysql',
+                              if_exists='replace')
     elif class_types == 'st':
         st_classified = ts.get_st_classified()
-        st_classified.to_sql(
-            'classification_st', engine, flavor='mysql', if_exists='replace')
+        st_classified.to_sql('classification_st',
+                             engine,
+                             flavor='mysql',
+                             if_exists='replace')
     elif class_types == 'hs300':
         hs300s = ts.get_hs300s()
-        hs300s.to_sql(
-            'classification_hs300s',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        hs300s.to_sql('classification_hs300s',
+                      engine,
+                      flavor='mysql',
+                      if_exists='replace')
     elif class_types == 'sz50':
         sz50s = ts.get_sz50s()
-        sz50s.to_sql(
-            'classification_sz50s',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        sz50s.to_sql('classification_sz50s',
+                     engine,
+                     flavor='mysql',
+                     if_exists='replace')
     elif class_types == 'zz500':
         zz500s = ts.get_zz500s()
-        zz500s.to_sql(
-            'classification_zz500s',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        zz500s.to_sql('classification_zz500s',
+                      engine,
+                      flavor='mysql',
+                      if_exists='replace')
     elif class_types == 'terminated':
         terminated = ts.get_terminated()
-        terminated.to_sql(
-            'classification_terminated',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        terminated.to_sql('classification_terminated',
+                          engine,
+                          flavor='mysql',
+                          if_exists='replace')
     elif class_types == 'suspended':
         suspended = ts.get_suspended()
-        suspended.to_sql(
-            'classification_suspended',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        suspended.to_sql('classification_suspended',
+                         engine,
+                         flavor='mysql',
+                         if_exists='replace')
 
 
 def classification():
@@ -156,81 +168,87 @@ def macro_type(macros_type):
     if macros_type == 'deposit_rate':
         deposit_rate = ts.get_deposit_rate()
         if deposit_rate is not None:
-            deposit_rate.to_sql(
-                'macros_deposit_rate',
-                engine,
-                flavor='mysql',
-                if_exists='replace')
+            deposit_rate.to_sql('macros_deposit_rate',
+                                engine,
+                                flavor='mysql',
+                                if_exists='replace')
     elif macros_type == 'loan_rate':
         loan_rate = ts.get_loan_rate()
         if loan_rate is not None:
-            loan_rate.to_sql(
-                'macros_loan_rate',
-                engine,
-                flavor='mysql',
-                if_exists='replace')
+            loan_rate.to_sql('macros_loan_rate',
+                             engine,
+                             flavor='mysql',
+                             if_exists='replace')
     elif macros_type == 'rrr':
         rrr = ts.get_rrr()
         if rrr is not None:
-            rrr.to_sql(
-                'macros_rrr', engine, flavor='mysql', if_exists='replace')
+            rrr.to_sql('macros_rrr',
+                       engine,
+                       flavor='mysql',
+                       if_exists='replace')
     elif macros_type == 'money_supply':
         money_supply = ts.get_money_supply()
         if money_supply is not None:
-            money_supply.to_sql(
-                'macros_money_supply',
-                engine,
-                flavor='mysql',
-                if_exists='replace')
+            money_supply.to_sql('macros_money_supply',
+                                engine,
+                                flavor='mysql',
+                                if_exists='replace')
     elif macros_type == 'money_supply_bal':
         money_supply_bal = ts.get_money_supply_bal()
         if money_supply_bal is not None:
-            money_supply_bal.to_sql(
-                'macros_money_supply_bal',
-                engine,
-                flavor='mysql',
-                if_exists='replace')
+            money_supply_bal.to_sql('macros_money_supply_bal',
+                                    engine,
+                                    flavor='mysql',
+                                    if_exists='replace')
     elif macros_type == 'gdp_year':
         gdp_year = ts.get_gdp_year()
         if gdp_year is not None:
-            gdp_year.to_sql(
-                'macros_gdp_year', engine, flavor='mysql', if_exists='replace')
+            gdp_year.to_sql('macros_gdp_year',
+                            engine,
+                            flavor='mysql',
+                            if_exists='replace')
     elif macros_type == 'gdp_quater':
         gdp_quater = ts.get_gdp_quarter()
         if gdp_quater is not None:
-            gdp_quater.to_sql(
-                'macros_gdp_quater',
-                engine,
-                flavor='mysql',
-                if_exists='replace')
+            gdp_quater.to_sql('macros_gdp_quater',
+                              engine,
+                              flavor='mysql',
+                              if_exists='replace')
     elif macros_type == 'gdp_for':
         gdp_for = ts.get_gdp_for()
         if gdp_for is not None:
-            gdp_for.to_sql(
-                'macros_gdp_for', engine, flavor='mysql', if_exists='replace')
+            gdp_for.to_sql('macros_gdp_for',
+                           engine,
+                           flavor='mysql',
+                           if_exists='replace')
     elif macros_type == 'gdp_pull':
         gdp_pull = ts.get_gdp_pull()
         if gdp_pull is not None:
-            gdp_pull.to_sql(
-                'macros_gdp_pull', engine, flavor='mysql', if_exists='replace')
+            gdp_pull.to_sql('macros_gdp_pull',
+                            engine,
+                            flavor='mysql',
+                            if_exists='replace')
     elif macros_type == 'gdp_contrib':
         gdp_contrib = ts.get_gdp_contrib()
         if gdp_contrib is not None:
-            gdp_contrib.to_sql(
-                'macros_gdp_contrib',
-                engine,
-                flavor='mysql',
-                if_exists='replace')
+            gdp_contrib.to_sql('macros_gdp_contrib',
+                               engine,
+                               flavor='mysql',
+                               if_exists='replace')
     elif macros_type == 'cpi':
         cpi = ts.get_cpi()
         if cpi is not None:
-            cpi.to_sql(
-                'macros_cpi', engine, flavor='mysql', if_exists='replace')
+            cpi.to_sql('macros_cpi',
+                       engine,
+                       flavor='mysql',
+                       if_exists='replace')
     elif macros_type == 'ppi':
         ppi = ts.get_ppi()
         if ppi is not None:
-            ppi.to_sql(
-                'macros_ppi', engine, flavor='mysql', if_exists='replace')
+            ppi.to_sql('macros_ppi',
+                       engine,
+                       flavor='mysql',
+                       if_exists='replace')
 
 
 def macro():
@@ -246,31 +264,41 @@ def top_type(top_type):
     if top_type == 'top_list':
         top_list = ts.top_list(today)
         if top_list is not None:
-            top_list.to_sql(
-                'top_list', engine, flavor='mysql', if_exists='append')
+            top_list.to_sql('top_list',
+                            engine,
+                            flavor='mysql',
+                            if_exists='append')
     elif top_type == 'cap_tops':
         cap_tops = ts.cap_tops()
         if cap_tops is not None:
             cap_tops['date'] = today
-            cap_tops.to_sql(
-                'top_cap_tops', engine, flavor='mysql', if_exists='append')
+            cap_tops.to_sql('top_cap_tops',
+                            engine,
+                            flavor='mysql',
+                            if_exists='append')
     elif top_type == 'broker_tops':
         broker_tops = ts.broker_tops()
         if broker_tops is not None:
             broker_tops['date'] = today
-            broker_tops.to_sql(
-                'top_broker_tops', engine, flavor='mysql', if_exists='append')
+            broker_tops.to_sql('top_broker_tops',
+                               engine,
+                               flavor='mysql',
+                               if_exists='append')
     elif top_type == 'inst_tops':
         inst_tops = ts.inst_tops()
         if inst_tops is not None:
             inst_tops['date'] = today
-            inst_tops.to_sql(
-                'top_inst_tops', engine, flavor='mysql', if_exists='append')
+            inst_tops.to_sql('top_inst_tops',
+                             engine,
+                             flavor='mysql',
+                             if_exists='append')
     elif top_type == 'inst_detail':
         inst_detail = ts.inst_detail()
         if inst_detail is not None:
-            inst_detail.to_sql(
-                'top_inst_detail', engine, flavor='mysql', if_exists='append')
+            inst_detail.to_sql('top_inst_detail',
+                               engine,
+                               flavor='mysql',
+                               if_exists='append')
 
 
 def top():
@@ -285,31 +313,28 @@ def reference(year_to_start=2010):
         profit_data = ts.profit_data(year=year, top=100)
         profit_data.sort('shares', ascending=False)
         if profit_data is not None:
-            profit_data.to_sql(
-                'reference_profit_data',
-                engine,
-                flavor='mysql',
-                if_exists='append')
+            profit_data.to_sql('reference_profit_data',
+                               engine,
+                               flavor='mysql',
+                               if_exists='append')
 
     def forecast_data(year):
         for i in range(4):
             predts = ts.forecast_data(year, i + 1)
             if predts is not None:
-                predts.to_sql(
-                    'reference_forecast_data',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('reference_forecast_data',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     def fund_holdings(year):
         for i in range(4):
             predts = ts.fund_holdings(year, i + 1)
             if predts is not None:
-                predts.to_sql(
-                    'reference_fund_holdings',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('reference_fund_holdings',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     starttime = datetime.datetime.today()
     year = [year_to_start + i
@@ -321,16 +346,17 @@ def reference(year_to_start=2010):
 
     xsg_data = ts.xsg_data()
     if xsg_data is not None:
-        xsg_data.to_sql(
-            'reference_xsg_data', engine, flavor='mysql', if_exists='replace')
+        xsg_data.to_sql('reference_xsg_data',
+                        engine,
+                        flavor='mysql',
+                        if_exists='replace')
 
     new_stocks = ts.new_stocks()
     if new_stocks is not None:
-        new_stocks.to_sql(
-            'reference_new_stocks',
-            engine,
-            flavor='mysql',
-            if_exists='replace')
+        new_stocks.to_sql('reference_new_stocks',
+                          engine,
+                          flavor='mysql',
+                          if_exists='replace')
 
 
 def fundamental(year_to_start=2010):
@@ -341,11 +367,10 @@ def fundamental(year_to_start=2010):
             if predts is not None:
                 predts['year'] = year
                 predts['quarter'] = quarter
-                predts.to_sql(
-                    'fundamental_report_data',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('fundamental_report_data',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     def profit_data(year):
         for i in range(4):
@@ -354,11 +379,10 @@ def fundamental(year_to_start=2010):
             if predts is not None:
                 predts['year'] = year
                 predts['quarter'] = quarter
-                predts.to_sql(
-                    'fundamental_profit_data',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('fundamental_profit_data',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     def operation_data(year):
         for i in range(4):
@@ -367,11 +391,10 @@ def fundamental(year_to_start=2010):
             if predts is not None:
                 predts['year'] = year
                 predts['quarter'] = quarter
-                predts.to_sql(
-                    'fundamental_operation_data',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('fundamental_operation_data',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     def debtpaying_data(year):
         for i in range(4):
@@ -380,11 +403,10 @@ def fundamental(year_to_start=2010):
             if predts is not None:
                 predts['year'] = year
                 predts['quarter'] = quarter
-                predts.to_sql(
-                    'fundamental_debtpaying_data',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('fundamental_debtpaying_data',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     def cashflow_data(year):
         for i in range(4):
@@ -393,11 +415,10 @@ def fundamental(year_to_start=2010):
             if predts is not None:
                 predts['year'] = year
                 predts['quarter'] = quarter
-                predts.to_sql(
-                    'fundamental_cashflow_data',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('fundamental_cashflow_data',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     def growth_data(year):
         for i in range(4):
@@ -406,11 +427,10 @@ def fundamental(year_to_start=2010):
             if predts is not None:
                 predts['year'] = year
                 predts['quarter'] = quarter
-                predts.to_sql(
-                    'fundamental_growth_data',
-                    engine,
-                    flavor='mysql',
-                    if_exists='append')
+                predts.to_sql('fundamental_growth_data',
+                              engine,
+                              flavor='mysql',
+                              if_exists='append')
 
     starttime = datetime.datetime.today()
     year = [year_to_start + i
@@ -510,8 +530,7 @@ def zrztjrbx_stat(day=None):
     if day is None:
         day = datetime.datetime.today().strftime('%Y%m%d')
         url = 'http://hqdata.jrj.com.cn/zrztjrbx/history/' + day + '.js'
-    r = requests.get(
-        url=url)
+    r = requests.get(url=url)
     zrztjrbx = r.text.replace('var min_performance=','').replace(';','') \
         .replace('dot:','"dot":').replace('pl:','"pl":').replace('ztsize:','"ztsize":')
     res = eval(zrztjrbx)
@@ -523,25 +542,31 @@ def zrztjrbx_stat(day=None):
     # lbgg = res['Data'][len-1][2] 连板个股数
     return res
 
+
 #都有哪些概念
 def concept_code():
     url = 'http://stock.jrj.com.cn/concept/conceptCode.js'
 
+
 #概念股具体列表
 def concept_stocks(concept):
-    url = 'http://stock.jrj.com.cn/concept/conceptdetail/conceptStock_%s.js'%concept
+    url = 'http://stock.jrj.com.cn/concept/conceptdetail/conceptStock_%s.js' % concept
+
 
 #概念股资金
 def concept_zj(concept_code):
-    url = 'http://stock.jrj.com.cn/action/concept/queryConceptHQ.jspa?conceptcode='+concept_code+'&vname=zjlr'
+    url = 'http://stock.jrj.com.cn/action/concept/queryConceptHQ.jspa?conceptcode=' + concept_code + '&vname=zjlr'
+
 
 # 5分钟异动
 def five_fifth():
     url = 'http://stock.jrj.com.cn/concept/fiveAndFifth.js?_=' + time.time()
 
+
 #个股行情
 def stockcodes_hq(stockcodes):
     url = 'http://q.jrjimg.cn/?q=cn|s&o=pl,d&i={%s}&c=code,lcp,np,hlp,pl,name,stp&n=realHQ' % stockcodes
+
 
 #具体个股昨日涨停股今日表现
 def zrztjrbx_limitup():
@@ -567,7 +592,8 @@ def leader_industry():
 #领涨概念&对应的概念龙头股
 def leader_concept():
     r = requests.get(
-        url='http://stock.jrj.com.cn/action/concept/queryConceptHQ.jspa?sort=todayPl&vname=desc&order=desc&pn=1&ps=50&_dc=%f' % time.time())
+        url='http://stock.jrj.com.cn/action/concept/queryConceptHQ.jspa?sort=todayPl&vname=desc&order=desc&pn=1&ps=50&_dc=%f'
+        % time.time())
     res = r.text.replace('var desc=', '').replace(';', '')
     return eval(res)
 
@@ -611,19 +637,24 @@ def zjlc_stat():
         .replace('Column:{code:0 ,name:1 ,np:2 ,pl:3 ,zjin:4 ,inratio:5 ,zlin:6 ,zlratio:7 ,j2:8 ,zdratio:9 ,j1:10 ,xdratio:11 },','')
     return eval(res)
 
+
 url = 'http://hqdata.jrj.com.cn/zrztjrbx/limitup.js'
+
 
 #昨日涨停个股今日开盘表现(涨幅为正德股/总涨停股)
 def zrztjrbx_open_stat():
     pass
 
+
 #昨日涨停个股今日收盘表现(上涨股/总涨停股)
 def zrztjrbx_close_stat():
     pass
 
+
 #各时间段涨停数统计
 def zt_stat():
     url = 'http://home.flashdata2.jrj.com.cn/limitStatistic/min.js'
+
 
 #涨停强度
 def zt_hot():
