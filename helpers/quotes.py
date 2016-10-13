@@ -8,6 +8,7 @@ import datetime as dt
 import gevent
 from gevent.threadpool import ThreadPool
 import requests
+import time
 thread_pool = ThreadPool(maxsize=50)
 engine = MySQLdb.connect(**common_mysql_config)
 
@@ -505,14 +506,42 @@ def ztforce_stat(day=None):
 
 #昨日涨停股今日表现
 def zrztjrbx_stat(day=None):
+    url = 'http://hqdata.jrj.com.cn/zrztjrbx/min_performance.js'
     if day is None:
         day = datetime.datetime.today().strftime('%Y%m%d')
+        url = 'http://hqdata.jrj.com.cn/zrztjrbx/history/' + day + '.js'
     r = requests.get(
-        url='http://hqdata.jrj.com.cn/zrztjrbx/history/' + day + '.js')
+        url=url)
     zrztjrbx = r.text.replace('var min_performance=','').replace(';','') \
         .replace('dot:','"dot":').replace('pl:','"pl":').replace('ztsize:','"ztsize":')
-    return eval(zrztjrbx)
+    res = eval(zrztjrbx)
+    # res['total'] #昨日涨停个数
+    # len = len(res['Data'])
+    # zf = res['Data'][len-1][1] #平均涨幅
+    # zqxy = (zf >= 5 ? "爆棚" : (zf >= 3 ? "强" :(zf >= 0 ? "弱":(zf >= -3 ? "差" :(zf > -5 ? "资金被套" : "被坑杀"))))) #赚钱效应
+    # zqbk = res['bestboardcode'] 最赚钱板块
+    # lbgg = res['Data'][len-1][2] 连板个股数
+    return res
 
+#都有哪些概念
+def concept_code():
+    url = 'http://stock.jrj.com.cn/concept/conceptCode.js'
+
+#概念股具体列表
+def concept_stocks(concept):
+    url = 'http://stock.jrj.com.cn/concept/conceptdetail/conceptStock_%s.js'%concept
+
+#概念股资金
+def concept_zj(concept_code):
+    url = 'http://stock.jrj.com.cn/action/concept/queryConceptHQ.jspa?conceptcode='+concept_code+'&vname=zjlr'
+
+# 5分钟异动
+def five_fifth():
+    url = 'http://stock.jrj.com.cn/concept/fiveAndFifth.js?_=' + time.time()
+
+#个股行情
+def stockcodes_hq(stockcodes):
+    url = 'http://q.jrjimg.cn/?q=cn|s&o=pl,d&i={%s}&c=code,lcp,np,hlp,pl,name,stp&n=realHQ' % stockcodes
 
 #具体个股昨日涨停股今日表现
 def zrztjrbx_limitup():
@@ -538,7 +567,7 @@ def leader_industry():
 #领涨概念&对应的概念龙头股
 def leader_concept():
     r = requests.get(
-        url='http://stock.jrj.com.cn/action/concept/queryConceptHQ.jspa?sort=todayPl&vname=desc&order=desc&pn=1&ps=50')
+        url='http://stock.jrj.com.cn/action/concept/queryConceptHQ.jspa?sort=todayPl&vname=desc&order=desc&pn=1&ps=50&_dc=%f' % time.time())
     res = r.text.replace('var desc=', '').replace(';', '')
     return eval(res)
 
@@ -582,10 +611,20 @@ def zjlc_stat():
         .replace('Column:{code:0 ,name:1 ,np:2 ,pl:3 ,zjin:4 ,inratio:5 ,zlin:6 ,zlratio:7 ,j2:8 ,zdratio:9 ,j1:10 ,xdratio:11 },','')
     return eval(res)
 
- #昨日涨停个股今日开盘表现(涨幅为正德股/总涨停股)
+url = 'http://hqdata.jrj.com.cn/zrztjrbx/limitup.js'
+
+#昨日涨停个股今日开盘表现(涨幅为正德股/总涨停股)
 def zrztjrbx_open_stat():
     pass
+
 #昨日涨停个股今日收盘表现(上涨股/总涨停股)
 def zrztjrbx_close_stat():
     pass
 
+#各时间段涨停数统计
+def zt_stat():
+    url = 'http://home.flashdata2.jrj.com.cn/limitStatistic/min.js'
+
+#涨停强度
+def zt_hot():
+    url = 'http://data.share.jrj.com.cn/stocks/pubdata/codehot-min.js'
